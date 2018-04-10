@@ -1,6 +1,12 @@
 // use the local ocp cluster
 openshift.withCluster() {
 
+    echo "CURRENT_NAMESPACE ${CURRENT_NAMESPACE}"
+        echo "NAMESPACE ${NAMESPACE}"
+        echo "VERSION ${VERSION}"
+        echo "CURRENT_STAGE ${CURRENT_STAGE}"
+        echo "NEXT_STAGE ${NEXT_STAGE}"
+    
     // use the default namespace
     openshift.withProject(CURRENT_NAMESPACE) {
 
