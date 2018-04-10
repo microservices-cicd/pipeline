@@ -3,20 +3,20 @@ kind: Template
 labels:
   template: stage-pipeline
 message: A Jenkins server will be automatically instantiated in this project to manage
-  the Pipeline BuildConfig created by this template.  You will be able to log in to
+  the Pipeline.  You will be able to log in to
   it using your OpenShift user credentials.
 metadata:
   annotations:
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: ${NEXT_STAGE}-pipeline
+  name: stage-pipeline
 objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: stage-pipeline
+    name: ${NEXT_STAGE}-pipeline
     labels:
-      application: stage-pipeline
+      app: ${NEXT_STAGE}-pipeline
   spec:
     triggers: []
     runPolicy: Serial
