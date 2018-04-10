@@ -1,0 +1,32 @@
+// use the local ocp cluster
+openshift.withCluster() {
+
+    // use the default namespace
+    openshift.withProject(CURRENT_NAMESPACE) {
+
+        echo "CURRENT_NAMESPACE ${CURRENT_NAMESPACE}"
+        echo "NAMESPACE ${NAMESPACE}"
+        echo "VERSION ${VERSION}"
+        echo "CURRENT_STAGE ${CURRENT_STAGE}"
+        echo "NEXT_STAGE ${NEXT_STAGE}"
+        
+        try {
+            // run the pipeline on a node
+            node {
+                    // the build stage
+                    stage("Test") {
+                     echo "test"
+                    }
+        
+                    
+                }
+            } 
+        
+        } catch(e) {
+            String error = "${e}";
+            
+            error "${error}"
+        }
+    }
+}
+
