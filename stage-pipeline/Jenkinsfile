@@ -7,7 +7,7 @@ openshift.withCluster() {
     def CURRENT_STAGE = "dev"
     def NEXT_STAGE = "qa"
     
-    // use the default namespace
+    // use the current namespace
     openshift.withProject(CURRENT_NAMESPACE) {
 
         echo "CURRENT_NAMESPACE ${CURRENT_NAMESPACE}"
