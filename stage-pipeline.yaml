@@ -19,6 +19,8 @@ spec:
     env:
     - name: "NAMESPACE"
       value: "${NAMESPACE}"  
+    - name: "CURRENT_NAMESPACE"
+      value: "${CURRENT_NAMESPACE}"  
     - name: "VERSION"
       value: "${VERSION}"    
     - name: "CURRENT_STAGE"
@@ -30,6 +32,9 @@ spec:
   postCommit: {}
   nodeSelector: {}
 parameters:
+- name: CURRENT_NAMESPACE
+required: true
+description: 'The current namespace'
 - name: NAMESPACE
 required: true
 description: 'The stage namespace'
