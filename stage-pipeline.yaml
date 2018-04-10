@@ -37,13 +37,18 @@ parameters:
 - name: CURRENT_NAMESPACE
   required: true
   description: 'The current namespace'
+  value: 'm-cicd-dev'
 - name: NAMESPACE
   required: true
   description: 'The stage namespace'
+  value: 'm-cicd-qa'
 - name: VERSION
   required: true
   description: 'The version for the image streams'
+  value: 'v1.0'
 - name: CURRENT_STAGE
   required: true
+  value: 'dev'
 - name: NEXT_STAGE
   required: true
+  value: 'qa'
