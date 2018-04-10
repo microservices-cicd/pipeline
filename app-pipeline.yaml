@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: app-pipeline
+message: A Jenkins server will be automatically instantiated in this project to manage
+  the Pipeline.  You will be able to log in to
+  it using your OpenShift user credentials.
+metadata:
+  annotations:
+    iconClass: icon-jenkins
+    tags: instant-app,jenkins
+  name: app-pipeline
+objects:
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    name: ${APP}-${NEXT_STAGE}-pipeline
+    labels:
+      app: ${APP}-${NEXT_STAGE}-pipeline
+  spec:
+    triggers: []
+    runPolicy: Serial
+    strategy:
+      jenkinsPipelineStrategy:
+        jenkinsfile: |-
+          // use the local ocp cluster
+          openshift.withCluster() {
+
+              def CURRENT_NAMESPACE = "${CURRENT_NAMESPACE}"
+              def NAMESPACE = "${NAMESPACE}"
+              def VERSION = "${VERSION}"
+              def CURRENT_STAGE = "${CURRENT_STAGE}"
+              def NEXT_STAGE = "${NEXT_STAGE}"
+              def APP = "${APP}"
+              
+              // use the current namespace
+              openshift.withProject() {
+
+                  echo "CURRENT_NAMESPACE ${CURRENT_NAMESPACE}"
+                  echo "NAMESPACE ${NAMESPACE}"
+                  echo "VERSION ${VERSION}"
+                  echo "CURRENT_STAGE ${CURRENT_STAGE}"
+                  echo "NEXT_STAGE ${NEXT_STAGE}"
+                  echo "APP ${APP}"
+                  
+                  try {
+                      // run the pipeline on a node
+                      node {
+                          stage("Set new trigger") {
+                              sh "oc set triggers dc/${APP} --from-image ${APP}:${VERSION} --containers ${APP} -n ${NAMESPACE}"
+                          }
+                          
+                          stage("Tag ${APP}") {
+                              openshift.tag("${CURRENT_NAMESPACE}/${APP}:latest", "${NAMESPACE}/${APP}:${VERSION}")
+                          }
+                      }
+
+                  } catch(e) {
+                      echo "in catch block"
+                      echo "Caught: ${err}"
+                      currentBuild.result = 'FAILURE'
+                      throw err
+                  }
+              }
+          }    
+      type: JenkinsPipeline
+    output: {}
+    resources: {}
+    postCommit: {}
+    nodeSelector: {}
+parameters:
+- name: CURRENT_NAMESPACE
+  required: true
+  description: 'The current namespace'
+  value: 'm-cicd-dev'
+- name: NAMESPACE
+  required: true
+  description: 'The stage namespace'
+  value: 'm-cicd-qa'
+- name: VERSION
+  required: true
+  description: 'The version for the image streams'
+  value: 'v1.2'
+- name: CURRENT_STAGE
+  required: true
+  value: 'dev'
+- name: NEXT_STAGE
+  required: true
+  value: 'qa'
+- name: APP
+  required: true
+  value: 'front-end'
