@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: BuildConfig
+metadata:
+  name: stage-pipeline
+  labels:
+    application: stage-pipeline
+spec:
+  triggers: []
+  runPolicy: Serial
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/microservices-cicd.git'
+      ref: master
+  strategy:
+    type: JenkinsPipeline
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: stage-pipeline/Jenkinsfile
+    env:
+    - name: "NAMESPACE"
+      value: "${NAMESPACE}"  
+    - name: "VERSION"
+      value: "${VERSION}"    
+    - name: "CURRENT_STAGE"
+      value: "${CURRENT_STAGE}"    
+    - name: "NEXT_STAGE"
+      value: "${NEXT_STAGE}"    
+  output: {}
+  resources: {}
+  postCommit: {}
+  nodeSelector: {}
+parameters:
+- name: NAMESPACE
+required: true
+description: 'The stage namespace'
+- name: VERSION
+required: true
+description: 'The version for the image streams'
+- name: CURRENT_STAGE
+required: true
+- name: NEXT_STAGE
+required: true
