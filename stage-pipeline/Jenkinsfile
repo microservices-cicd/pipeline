@@ -37,7 +37,7 @@ openshift.withCluster() {
                 }
                 
                 stage("Export config") {
-                    sh "oc export dc,svc,secrets --as-template=microservices-cicd -l stage=${CURRENT_STAGE} > microservices-cicd.yaml"
+                    sh "oc export dc,svc,secrets --as-template=microservices-cicd -l stage=${CURRENT_STAGE} -n ${CURRENT_NAMESPACE} > microservices-cicd.yaml"
                     sh "sed -i.bak 's/namespace: ${CURRENT_NAMESPACE}/namespace: ${NAMESPACE}/g' microservices-cicd.yaml"
                     sh "sed -i.bak 's/stage: ${CURRENT_STAGE}/stage: ${NEXT_STAGE}/g' microservices-cicd.yaml"
                     sh "sed -i.bak 's/:latest/:${VERSION}/g' microservices-cicd.yaml"
