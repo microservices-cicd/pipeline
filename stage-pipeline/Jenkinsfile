@@ -17,9 +17,6 @@ openshift.withCluster() {
                     stage("Test") {
                      echo "test"
                     }
-        
-                    
-                }
             } 
         
         } catch(e) {
