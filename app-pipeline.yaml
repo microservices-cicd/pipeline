@@ -14,9 +14,9 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: ${APP}-${NEXT_STAGE}-pipeline
+    name: ${APP}-${NEXT_STAGE}-pipeline-${VERSION}
     labels:
-      app: ${APP}-${NEXT_STAGE}-pipeline
+      app: ${APP}-${NEXT_STAGE}-pipeline-${VERSION}
   spec:
     triggers: []
     runPolicy: Serial
