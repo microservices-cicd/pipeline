@@ -49,7 +49,10 @@ openshift.withCluster() {
             }
         
         } catch(e) {
-            error "${e}"
+            echo "in catch block"
+            echo "Caught: ${err}"
+            currentBuild.result = 'FAILURE'
+            throw err
         }
     }
 }
