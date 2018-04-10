@@ -45,7 +45,6 @@ openshift.withCluster() {
                 
                 stage("Deploy to ${NEXT_STAGE}") {
                     sh "oc new-app --file=microservices-cicd.yaml -n ${NAMESPACE}"
-                    sh "oc expose service/front-end -n ${NAMESPACE}"
                 }
             }
         
