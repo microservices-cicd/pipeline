@@ -1,17 +1,15 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: bluegreen-pipeline
+  template: stage-pipeline
 message: A Jenkins server will be automatically instantiated in this project to manage
   the Pipeline BuildConfig created by this template.  You will be able to log in to
   it using your OpenShift user credentials.
 metadata:
   annotations:
-    description: This example showcases a blue green deployment using a Jenkins
-      pipeline that pauses for approval.
     iconClass: icon-jenkins
     tags: instant-app,jenkins
-  name: bluegreen-pipeline
+  name: ${NEXT_STAGE}-pipeline
 objects:
 - apiVersion: v1
   kind: BuildConfig
