@@ -20,8 +20,20 @@ openshift.withCluster() {
             // run the pipeline on a node
             node {
                 // the build stage
-                stage("Test") {
-                 echo "test"
+                stage("Tag Images") {
+                    openshift.tag("${CURRENT_NAMESPACE}/carts:latest", "${NAMESPACE}/carts:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/catalogue-db:latest", "${NAMESPACE}/catalogue-db:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/catalogue:latest", "${NAMESPACE}/catalogue:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/front-end:latest", "${NAMESPACE}/front-end:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/orders:latest", "${NAMESPACE}/orders:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/payment:latest", "${NAMESPACE}/payment:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/queue-master:latest", "${NAMESPACE}/queue-master:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/shipping:latest", "${NAMESPACE}/shipping:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/user-db:latest", "${NAMESPACE}/user-db:${VERSION}")
+                    openshift.tag("${CURRENT_NAMESPACE}/user:latest", "${NAMESPACE}/user:${VERSION}")
+                    
+                    openshift.tag("${CURRENT_NAMESPACE}/golang:1.7", "${NAMESPACE}/golang:1.7")
+                    openshift.tag("${CURRENT_NAMESPACE}/rabbitmq:3.6.8", "${NAMESPACE}/rabbitmq:3.6.8")
                 }
             }
         
