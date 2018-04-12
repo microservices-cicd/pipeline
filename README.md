@@ -1,7 +1,12 @@
 # Microservices CICD
 
+## create project 
+```
+oc new-project m-cicd-dev
+```
+
 ## carts-db
-- type: mongo db
+- type: mongodb
 
 ### crate app
 ```
@@ -38,7 +43,7 @@ oc delete dc,bc,builds,sa,svc,po,is,secret -l app=carts
 
 
 ## catalogue-db (https://github.com/microservices-cicd/catalogue)
-- type: mysql db
+- type: mysql
 
 ### modifications
 - docker/catalogue-db/data/mysql-init/90-init-db.sh
@@ -124,7 +129,7 @@ oc delete dc,bc,builds,sa,svc,po,is,secret -l app=catalogue
 
 
 ## front-end (https://github.com/microservices-cicd/front-end)
-- type:node js
+- type:nodejs
 
 ### create app
 ```
@@ -140,7 +145,7 @@ oc delete dc,bc,builds,sa,svc,po,is,secret -l app=front-end
 
 
 ## orders-db
-- type: mongo db
+- type: mongodb
 
 ### crate app
 ```
@@ -249,9 +254,8 @@ oc new-app --name=shipping redhat-openjdk18-openshift:1.2~https://github.com/mic
 oc delete dc,bc,builds,sa,svc,po,is,secret -l app=shipping
 ```
 
-
 ## user-db (https://github.com/microservices-cicd/user/tree/master/docker/user-db)
-- type:mongo db
+- type:mongodb
 
 ### modifications
 - /docker/user-db/mongodb-init/90-create-insert.sh
@@ -279,7 +283,6 @@ oc new-app --name=user-db mongodb:3.2~https://github.com/microservices-cicd/user
 ```
 oc delete dc,bc,builds,sa,svc,po,is,secret -l app=user-db
 ```
-
 
 ## user (https://github.com/microservices-cicd/user)
 - type:go
@@ -337,4 +340,45 @@ oc patch svc/carts -p '[{"op": "replace", "path": "/spec/ports/0", "value":{"nam
 ## create route for the frontend
 ```
 oc expose service/front-end
+```
+
+## jenkins
+
+## create a new m-cicd-qa project
+```
+oc new-project m-cicd-qa
+```
+
+### create jenkins project
+```
+oc new-project m-cicd-jenkins
+```
+
+### allow jenkins to access m-cicd-dev and m-cicd-qa projects
+```
+oc policy add-role-to-user edit system:serviceaccount:m-cicd-jenkins:jenkins -n m-cicd-dev
+oc policy add-role-to-user edit system:serviceaccount:m-cicd-jenkins:jenkins -n m-cicd-qa
+```
+
+### pipeline stage from dev to qa
+```
+oc new-app -f https://raw.githubusercontent.com/microservices-cicd/pipeline/master/stage-pipeline.yaml \
+-p CURRENT_NAMESPACE=m-cicd-dev \
+-p NAMESPACE=m-cicd-qa \
+-p VERSION=v1.2 \
+-p CURRENT_STAGE=dev \
+-p NEXT_STAGE=qa \
+-n m-cicd-jenkins
+```
+
+### pipeline for single microservice
+```
+oc new-app -f https://raw.githubusercontent.com/microservices-cicd/pipeline/master/app-pipeline.yaml \
+-p CURRENT_NAMESPACE=m-cicd-dev \
+-p NAMESPACE=m-cicd-qa \
+-p VERSION=v1.2 \
+-p CURRENT_STAGE=dev \
+-p NEXT_STAGE=qa \
+-p APP=front-end \
+-n m-cicd-jenkins
 ```
