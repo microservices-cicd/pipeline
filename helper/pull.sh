@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-# hello-world                      latest              ef872312fe1b        3 months ago        910 B
-# hello-world                      latest              ef872312fe1bbc5e05aae626791a47ee9b032efa8f3bda39cc0be7b56bfe59b9   3 months ago        910 B
-
-# debian                           latest              f6fab3b798be        10 weeks ago        85.1 MB
-# debian                           latest              f6fab3b798be3174f45aa1eb731f8182705555f89c9026d8c1ef230cbf8301dd   10 weeks ago        85.1 MB
 if ! command -v curl &> /dev/null; then
 	echo >&2 'error: "curl" not found!'
 	exit 1
@@ -36,12 +31,6 @@ doNotGenerateManifestJson=
 
 # bash v4 on Windows CI requires CRLF separator
 newlineIFS=$'\n'
-if [ "$(go env GOHOSTOS)" = 'windows' ]; then
-	major=$(echo ${BASH_VERSION%%[^0.9]} | cut -d. -f1)
-	if [ "$major" -ge 4 ]; then
-		newlineIFS=$'\r\n'
-	fi
-fi
 
 REGISTRY=${REGISTRY:-docker-registry.default.svc}
 registryBase='https://${REGISTRY}'
@@ -239,7 +228,7 @@ while [ $# -gt 0 ]; do
 					for i in "${!layers[@]}"; do
 						layerMeta="${layers[$i]}"
 						maniArch="$(echo "$layerMeta" | jq --raw-output '.platform.architecture')"
-						if [ "$maniArch" = "$(go env GOARCH)" ]; then
+						if [ "$maniArch" = "amd64" ]; then
 							digest="$(echo "$layerMeta" | jq --raw-output '.digest')"
 							# get second level single manifest
 							submanifestJson="$(
