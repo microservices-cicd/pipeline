@@ -20,4 +20,4 @@ WORKDIR /tmp
 
 # Default command
 ENTRYPOINT ["/bin/bash"]
-CMD ["tail","-f","/dev/null"]
+CMD ["exec","tail","-f","/dev/null"]
