@@ -19,5 +19,4 @@ RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
 WORKDIR /tmp
 
 # Default command
-ENTRYPOINT ["/bin/bash"]
-CMD ["tail -f /dev/null"]
+ENTRYPOINT ["tail -f /dev/null"]
