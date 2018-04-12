@@ -399,3 +399,95 @@ oc expose service/front-end-blue -n m-cicd-dev
 oc delete dc,bc,builds,sa,svc,po,is,secret -l app=front-end-blue -n m-cicd-dev
 ```
 
+## Azure Service
+### RedisCache
+```
+oc set env --from=configmap/redis-cache dc/front-end -n m-cicd-dev
+```
+
+### MongoDB
+```
+oc set env --from=configmap/azure-mongo dc/orders -n m-cicd-dev
+```
+
+## AutoScale
+### Resource Limits: front-end
+- CPU Request: 50 millicores
+- CPU Limit: 150 millicores
+
+### Autoscale Deployment Config
+- Min Pods: 1
+- Max Pods: 3
+- CPU Request Target: 80%
+
+### cleanup
+```
+oc delete hpa/front-end -n m-cicd-dev
+```
+
+## LoadTest
+### enable prometheus metrics
+```
+oc patch dc/catalogue \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/carts \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/orders \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/payment \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/shipping \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/user \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/user \
+-p '[{"op": "add", "path": "/spec/template/spec/containers/0/ports", "value":{"ports":[{"containerPort":"8080", "protocol":"TCP"}]}}]' \
+--type=json \
+-n m-cicd-dev
+
+oc patch dc/front-end \
+-p '[{"op": "replace", "path": "/spec/template/metadata/annotations", "value":{"prometheus.io/scrape":"true", "prometheus.io/path":"/metrics","prometheus.io/port":"8080"}}]' \
+--type=json \
+-n m-cicd-dev
+```
+
+### create app
+```
+oc new-build --name=load-test https://github.com/microservices-cicd/load-test#master \
+-n m-cicd-dev
+
+oc run -i -t load-test --image=172.30.253.62:5000/m-cicd-dev/load-test:latest \
+--env="HOST=front-end-m-cicd-dev.app.azp18.appagile.de" \
+--env="CLIENTS=5" \
+--env="REQUESTS=10000" \
+--restart=Never \
+-n m-cicd-dev
+
+oc delete po load-test -n m-cicd-dev
+```
+
+### cleanup
+```
+oc delete dc,bc,builds,sa,svc,po,is,secret -l build=load-test -n m-cicd-dev
+oc delete po load-test -n m-cicd-dev
+```
+
+
