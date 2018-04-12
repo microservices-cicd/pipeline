@@ -43,6 +43,7 @@ if [ "$(go env GOHOSTOS)" = 'windows' ]; then
 	fi
 fi
 
+REGISTRY=${REGISTRY:-docker-registry.default.svc}
 registryBase='https://${REGISTRY}'
 authBase='https://${REGISTRY}/openshift'
 authService='${REGISTRY}'
@@ -154,8 +155,7 @@ handle_single_manifest_v2() {
 					echo "skipping existing ${layerId:0:12}"
 					continue
 				fi
-				#local token="$(curl -fsSL "$authBase/token?service=$authService&scope=repository:$image:pull" | jq --raw-output '.token')"
-				local token="${PARAM_TOKEN}"
+				local token="$(cat /run/secrets/kubernetes.io/serviceaccount/token)"
 				fetch_blob "$token" "$image" "$layerDigest" "$dir/$layerTar" --progress
 				;;
 
@@ -198,7 +198,7 @@ while [ $# -gt 0 ]; do
 
 	imageFile="${image//\//_}" # "/" can't be in filenames :)
 
-	token="${PARAM_TOKEN}"
+	token="$(cat /run/secrets/kubernetes.io/serviceaccount/token)"
 	
 	manifestJson="$(
 		curl -fsSL \
@@ -302,7 +302,7 @@ while [ $# -gt 0 ]; do
 					echo "skipping existing ${layerId:0:12}"
 					continue
 				fi
-				token="${PARAM_TOKEN}"
+				token="$(cat /run/secrets/kubernetes.io/serviceaccount/token)"
 				fetch_blob "$token" "$image" "$imageLayer" "$dir/$layerId/layer.tar" --progress
 			done
 			;;
