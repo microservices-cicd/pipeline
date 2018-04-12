@@ -96,7 +96,7 @@ handle_single_manifest_v2() {
 		# save the previous layer's ID
 		local parentId="$layerId"
 		# create a new fake layer ID based on this layer's digest and the previous layer's fake ID
-		layerId="$(echo "$parentId"$'\n'"$layerDigest" | shasum -a 256 | cut -d' ' -f1)"
+		layerId="$(echo "$parentId"$'\n'"$layerDigest" | sha256sum | cut -d' ' -f1)"
 		# this accounts for the possibility that an image contains the same layer twice (and thus has a duplicate digest value)
 
 		mkdir -p "$dir/$layerId"
