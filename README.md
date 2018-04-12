@@ -376,9 +376,26 @@ oc new-app -f https://raw.githubusercontent.com/microservices-cicd/pipeline/mast
 oc new-app -f https://raw.githubusercontent.com/microservices-cicd/pipeline/master/app-pipeline.yaml \
 -p CURRENT_NAMESPACE=m-cicd-dev \
 -p NAMESPACE=m-cicd-qa \
--p VERSION=v1.2 \
+-p VERSION=v1.3 \
 -p CURRENT_STAGE=dev \
 -p NEXT_STAGE=qa \
 -p APP=front-end \
 -n m-cicd-jenkins
 ```
+
+## Blue/Green
+### create app
+```
+oc new-app --name=front-end-blue nodejs:6~https://github.com/microservices-cicd/front-end#blue \
+-e PORT=8080 \
+-l stage=dev \
+-n m-cicd-dev
+
+oc expose service/front-end-blue -n m-cicd-dev
+```
+
+### cleanup
+```
+oc delete dc,bc,builds,sa,svc,po,is,secret -l app=front-end-blue -n m-cicd-dev
+```
+
