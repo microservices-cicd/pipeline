@@ -32,7 +32,7 @@ Afterwards the app itself:
 ```
 oc new-app --name=orders redhat-openjdk18-openshift:1.2~https://github.com/microservices-cicd/orders#master \
 -e PORT=8080 \
--e DB="user:pass@orders-db" \
+-e DB="mongodb://user:pass@orders-db" \
 -l stage=dev
 ```
-As we can not find a Dockerfile in the root directory of the repository, it is safe to assume the S2I functionality will be used, especially since the prefix for the repository is the name of the image which will be used. We already saw this behaviour in the carts app.
+As we can not find a Dockerfile in the root directory of the repository, it is safe to assume the S2I functionality will be used, especially since the prefix for the repository is the name of the image which will be used. We already saw this behaviour in the carts app. The DB environment variable is then used by the application itself to find it's database.
