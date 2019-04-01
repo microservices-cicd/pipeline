@@ -33,3 +33,20 @@ The `oc` tools already supplies you with a bash script that can be used for auto
 Since we want to avoid storing credentials permanently on disk, we will obtain a *token*. This has a limited timeframe where it can be used. To obtain the token, login via Browser and click on your name in the upper right corner. Here click on *Copy Login Command* and issue the copied command into your shell. It should look like `oc login <WEB_ADDRESS> --token=<YOUR_TOKEN`.
 
 After that, issue `oc projects`
+
+### Create your project
+
+To create your project, issue `oc new-project m-cicd-dev` where *m-cicd-dev* is the project name. As projects have to be unique, your trainer may supply another project name or a naming schema. Please keep in mind to change the project name whenever needed through this tutorial
+
+### Create the services
+
+We recommend the following order when creating the services. However, the services can be placed in whatever order your want, the order is recommended for understanding.
+
+1. [Creating the Carts](README_CARTS.md)
+2. [Creating the Catalogue](README_CATALOGUE.md)
+3. [Creating the Users](README_USERS.md)
+4. [Creating the Orders](README_ORDERS.md)
+5. [Creating the other small services](README_OTHERS.md)
+6. [Creating the Frontend and exposing it](README_FRONTEND.md)
+7. [Creating the CI/CD Pipeline](README_CICD.md)
+8. [Creating the Loadtest](README_LOADTEST.md) **not working for now **
