@@ -1,6 +1,6 @@
 # LoadTest
 
-** CURRENTLY NOT WORKING **
+**CURRENTLY NOT WORKING**
 
 ## Overview
 To ensure our application is actually working, let's do some requests. To see the increasing load, we have to create endpoints for prometheus to fetch, so the monitoring has some data we can later on display. We start exposing the needed URLs by adding the annotations.
