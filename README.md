@@ -49,4 +49,4 @@ We recommend the following order when creating the services. However, the servic
 5. [Creating the other small services](README_OTHERS.md)
 6. [Creating the Frontend and exposing it](README_FRONTEND.md)
 7. [Creating the CI/CD Pipeline](README_CICD.md)
-8. [Creating the Loadtest](README_LOADTEST.md) **not working for now **
+8. [Creating the Loadtest](README_LOADTEST.md) **not working for now**
