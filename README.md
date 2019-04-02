@@ -55,7 +55,10 @@ Now we will add another line to our `.bashrc`/`.bash_profile` (accodring to your
 
 Line to add:
 ```bash
-source ~/<project-path>/oc_completion.sh
+if [ -f ~/<project-path>/oc_completion.sh ]
+then
+    source ~/<project-path>/oc_completion.sh
+fi
 ```
  After logging in again, I was now able to use oc autocompletion
 
@@ -71,7 +74,7 @@ To create your project, issue `oc new-project m-cicd-dev` where *m-cicd-dev* is 
 
 ### Create the services
 
-We recommend the following order when creating the services. However, the services can be placed in whatever order your want, this order is structured the way that you will an understanding of what is done in order to achive that specific goal and builds ontop of each other in terms of understanding.
+We recommend the following order when creating the services. However, the services can be placed in whatever order your want, this order is structured the way that you will an understanding of what is done in order to achieve that specific goal and builds ontop of each other in terms of understanding.
 
 1. [Creating the Carts](README_CARTS.md)
 2. [Creating the Catalogue](README_CATALOGUE.md)
